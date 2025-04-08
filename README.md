@@ -70,7 +70,7 @@ The app will run at `http://127.0.0.1:5000`.
 ## 🧪 Tech Stack
 
 - **Frontend**: HTML, CSS, JavaScript, Bootstrap
-- **Backend**: Python 3.12, Flask
+- **Backend**: Python 3.12, Flask, Tensorflow
 - **AI Models**:
   - Emotion Detection: Custom pre-trained model (OpenCV/Dlib or similar)
   - Music Generation: Hugging Face `facebook/musicgen-small`
