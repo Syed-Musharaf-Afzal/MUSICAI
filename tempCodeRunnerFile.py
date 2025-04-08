@@ -1,0 +1,5 @@
+Button(control_frame, text="▶ PLAY", command=playsong, font=("Helvetica", 12, "bold"), fg="white", bg="#1DB954", activebackground="#1ED760", bd=0, relief="flat", width=10).grid(row=0, column=0, padx=15, pady=15)
+    # Button(control_frame, text="⏸ PAUSE", command=pausesong, font=("Helvetica", 12, "bold"), fg="white", bg="#535353", activebackground="#636363", bd=0, relief="flat", width=10).grid(row=0, column=1, padx=15, pady=15)
+    # Button(control_frame, text="⏩ NEXT", command=nextsong, font=("Helvetica", 12, "bold"), fg="white", bg="#535353", activebackground="#636363", bd=0, relief="flat", width=10).grid(row=1, column=0, padx=15, pady=15)
+    # Button(control_frame, text="🔀 SHUFFLE", command=shufflesong, font=("Helvetica", 12, "bold"), fg="white", bg="#535353", activebackground="#636363", bd=0, relief="flat", width=10).grid(row=1, column=1, padx=15, pady=15)
+    # Button(control_frame, text="⏹ STOP", command=stopsong, font=("Helvetica", 12, "bold"), fg="white", bg="#E60023", activebackground="#FF3333", bd=0, relief="flat", width=22).grid(row=2, column=0, columnspan=2, pady=10)

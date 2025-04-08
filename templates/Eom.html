@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- External Libraries -->
+    <script
+      src="https://kit.fontawesome.com/860e7596f3.js"
+      crossorigin="anonymous"
+    ></script>
+    <link rel="stylesheet" href="static/style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+    />
+    <title>Emotion Detection</title>
+  </head>
+  <body>
+    <h1>Generate Emotion to Music</h1>
+
+    <div style="display: flex; align-items: flex-start">
+      <!-- Video Feed -->
+      <div>
+        <img
+          id="video"
+          class="video"
+          src="static/gif.gif"
+          alt="Emotion Detection Feed"
+        />
+      </div>
+
+      <!-- Detected Emotion -->
+    </div>
+
+    <!-- Generate Music Button -->
+    <button id="generateMusicButton" class="button" style="margin-top: 20px">
+      <div class="dots_border"></div>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        class="sparkle"
+      >
+        <path
+          class="path"
+          stroke-linejoin="round"
+          stroke-linecap="round"
+          stroke="black"
+          fill="black"
+          d="M14.187 8.096L15 5.25L15.813 8.096C16.0231 8.83114 16.4171 9.50062 16.9577 10.0413C17.4984 10.5819 18.1679 10.9759 18.903 11.186L21.75 12L18.904 12.813C18.1689 13.0231 17.4994 13.4171 16.9587 13.9577C16.4181 14.4984 16.0241 15.1679 15.814 15.903L15 18.75L14.187 15.904C13.9769 15.1689 13.5829 14.4994 13.0423 13.9587C12.5016 13.4181 11.8321 13.0241 11.097 12.814L8.25 12L11.096 11.187C11.8311 10.9769 12.5006 10.5829 13.0413 10.0423C13.5819 9.50162 13.9759 8.83214 14.186 8.097L14.187 8.096Z"
+        ></path>
+      </svg>
+      <span class="text_button">Detect Emotion</span>
+    </button>
+    <div id= "emotionContainer" style="
+    font-size: 20px;
+    font-weight: bold;
+    margin-top: -10px;
+    margin-left: 240px;
+    text-shadow: 0px 0px 20px rgba(0, 0, 255, 1);">Emotion Detected: <span id="emotionType">-------</span></div>
+    <!-- Music Player -->
+    <div id="musicPlayerContainer">
+      <h1>Now Playing</h1>
+
+      <div class="audio-img-wrapper">
+        <div class="audio-img">
+          <img
+            id="songImage"
+            src="static/plate.jpg"
+            alt="Song Cover"
+            class="img"
+          />
+        </div>
+
+        <h2 id="songTitle" class="audio-title">Title of Audio</h2>
+      </div>
+
+      <div class="audio-progress">
+        <div class="current-time">00:00</div>
+        <div class="progress">
+          <div class="progress-bar"></div>
+          <div class="progress-head"></div>
+        </div>
+        <div class="time-info">
+          <div class="duration">00:00</div>
+        </div>
+      </div>
+
+      <div class="audio-btns">
+        <button class="btn skip-back" id="skipBackButton">
+          <i class="fa-solid fa-backward-step"></i>
+        </button>
+        <button class="btn play">
+          <span><i class="fa-solid fa-play"></i></span>
+        </button>
+        <button class="btn skip-forward" id="skipForwardButton">
+          <i class="fa-solid fa-forward-step"></i>
+        </button>
+      </div>
+    </div>
+
+    <audio id="audioPlayer">
+      <source src="static/songs/your-audio-file.mp3" type="audio/mpeg" />
+      Your browser does not support the audio element.
+    </audio>
+
+    <script>
+      // Detect Emotion and Play Music
+      document.getElementById("generateMusicButton").addEventListener("click", () => {
+        const video = document.getElementById("video");
+        const emotionType = document.getElementById("emotionType");
+        const audioPlayer = document.getElementById("audioPlayer");
+        const songTitle = document.getElementById("songTitle");
+        const songImage = document.getElementById("songImage");
+      
+        // Map emotions to emoji images
+        const emotionToEmojiMap = {
+          happy: "static/emojis/happy.jpg",
+          sad: "static/emojis/sad.jpg",
+          angry: "static/emojis/angry.jpg",
+          surprised: "static/emojis/surprised.jpg",
+          neutral: "static/emojis/neutral.jpg",
+          fearful: "static/emojis/fearful.jpg",
+          disgusted: "static/emojis/disgusted.jpg",
+        };
+      
+        video.src = "/video_feed";
+      
+        setTimeout(() => {
+          fetch("/detect_emotion")
+            .then((response) => {
+              if (!response.ok) {
+                throw new Error("Failed to fetch emotion data");
+              }
+              return response.json();
+            })
+            .then((data) => {
+              console.log("Emotion Detection Response:", data); // Debugging log
+      
+              const detectedEmotion = data.emotion || "Non detected";
+              emotionType.textContent = detectedEmotion;
+      
+              // Update emoji image
+              const emojiImage =
+                emotionToEmojiMap[detectedEmotion.toLowerCase()] || "static/emojis/neutral.png";
+              songImage.src = emojiImage;
+      
+              // Check if the song exists in the response
+              if (data.song) {
+                audioPlayer.src = data.song;
+                songTitle.textContent = data.song.split("/").pop();
+                audioPlayer.load();
+                audioPlayer.play();
+                togglePlayIcon(true);
+              } else {
+                console.warn("No song provided for the detected emotion.");
+              }
+            })
+            .catch((error) => {
+              console.error("Error fetching emotion data:", error);
+            });
+        }, 10000); // 10-second delay
+      });
+      
+      // Music Player Controls
+      const audioPlayer = document.getElementById("audioPlayer");
+      const progressBar = document.querySelector(".progress-bar");
+      const progressHead = document.querySelector(".progress-head");
+      const currentTimeDisplay = document.querySelector(".current-time");
+      const durationDisplay = document.querySelector(".duration");
+      const playButton = document.querySelector(".play i");
+      const skipBackButton = document.getElementById("skipBackButton");
+      const skipForwardButton = document.getElementById("skipForwardButton");
+      const volumeSlider = document.getElementById("volumeSlider");
+
+      // Update progress bar as music plays
+      let isDragging = false;
+
+      // Update progress bar on timeupdate
+      audioPlayer.addEventListener("timeupdate", () => {
+        if (audioPlayer.duration && !isDragging) {
+          const progress =
+            (audioPlayer.currentTime / audioPlayer.duration) * 100;
+          progressBar.style.width = `${progress}%`;
+          progressHead.style.left = `${progress}%`;
+
+          const minutes = Math.floor(audioPlayer.currentTime / 60)
+            .toString()
+            .padStart(2, "0");
+          const seconds = Math.floor(audioPlayer.currentTime % 60)
+            .toString()
+            .padStart(2, "0");
+          currentTimeDisplay.textContent = `${minutes}:${seconds}`;
+        }
+      });
+
+      // Add mouse events for dragging functionality
+      progressHead.addEventListener("mousedown", (event) => {
+        isDragging = true;
+
+        const onMouseMove = (e) => {
+          const progressBarRect =
+            progressBar.parentElement.getBoundingClientRect();
+          let newProgress =
+            ((e.clientX - progressBarRect.left) / progressBarRect.width) * 100;
+
+          // Clamp the progress between 0 and 100
+          newProgress = Math.max(0, Math.min(100, newProgress));
+
+          progressHead.style.left = `${newProgress}%`;
+          progressBar.style.width = `${newProgress}%`;
+        };
+
+        const onMouseUp = (e) => {
+          const progressBarRect =
+            progressBar.parentElement.getBoundingClientRect();
+          const newProgress =
+            ((e.clientX - progressBarRect.left) / progressBarRect.width) * 100;
+
+          // Update audioPlayer's currentTime
+          audioPlayer.currentTime = (newProgress / 100) * audioPlayer.duration;
+
+          isDragging = false;
+
+          // Remove event listeners
+          document.removeEventListener("mousemove", onMouseMove);
+          document.removeEventListener("mouseup", onMouseUp);
+        };
+
+        // Attach mousemove and mouseup listeners to the document
+        document.addEventListener("mousemove", onMouseMove);
+        document.addEventListener("mouseup", onMouseUp);
+      });
+
+      // Add click-to-jump functionality
+      progressBar.parentElement.addEventListener("click", (event) => {
+        const progressBarRect =
+          progressBar.parentElement.getBoundingClientRect();
+        const newProgress =
+          ((event.clientX - progressBarRect.left) / progressBarRect.width) *
+          100;
+
+        // Update progress bar and audioPlayer's currentTime
+        progressBar.style.width = `${newProgress}%`;
+        progressHead.style.left = `${newProgress}%`;
+        audioPlayer.currentTime = (newProgress / 100) * audioPlayer.duration;
+      });
+
+      // Display total duration when loaded
+      audioPlayer.addEventListener("loadedmetadata", () => {
+        const minutes = Math.floor(audioPlayer.duration / 60)
+          .toString()
+          .padStart(2, "0");
+        const seconds = Math.floor(audioPlayer.duration % 60)
+          .toString()
+          .padStart(2, "0");
+        durationDisplay.textContent = `${minutes}:${seconds}`;
+      });
+
+      // Play/Pause Functionality
+      document.querySelector(".play").addEventListener("click", () => {
+        if (audioPlayer.paused) {
+          audioPlayer.play();
+          togglePlayIcon(true);
+        } else {
+          audioPlayer.pause();
+          togglePlayIcon(false);
+        }
+      });
+
+      // Skip Backward 10 Seconds
+      skipBackButton.addEventListener("click", () => {
+        audioPlayer.currentTime = Math.max(0, audioPlayer.currentTime - 10);
+      });
+
+      // Skip Forward 10 Seconds
+      skipForwardButton.addEventListener("click", () => {
+        audioPlayer.currentTime = Math.min(
+          audioPlayer.duration,
+          audioPlayer.currentTime + 10
+        );
+      });
+
+      // Toggle Play/Pause Icon
+      function togglePlayIcon(isPlaying) {
+        if (isPlaying) {
+          playButton.classList.replace("fa-play", "fa-pause");
+        } else {
+          playButton.classList.replace("fa-pause", "fa-play");
+        }
+      }
+    </script>
+  </body>
+</html>

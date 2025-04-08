@@ -1,0 +1,20 @@
+Here are **10 creative prompts** you can use to generate music using the Hugging Face `musicgen-small` model:
+
+---
+
+🎼 **10 Music Generation Prompts**:
+
+1. **"A calm piano melody for a rainy evening"**  
+2. **"Upbeat electronic dance track for a summer party"**  
+3. **"Slow romantic guitar tune for a candlelight dinner"**  
+4. **"Epic orchestral soundtrack for a battle scene"**  
+5. **"Chill lo-fi beat for studying at night"**  
+6. **"Dark suspenseful background for a horror film"**  
+7. **"Happy ukulele and whistle tune for a beach vacation"**  
+8. **"Soothing ambient soundscape for meditation"**  
+9. **"Funky bass and drums for a retro 80s vibe"**  
+10. **"Fast-paced techno loop for a high-energy workout"**
+
+---
+
+Want prompts in a specific mood, genre, or instrument style? I can tailor them!
