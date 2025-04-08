@@ -1,7 +1,3 @@
-Here are **10 creative prompts** you can use to generate music using the Hugging Face `musicgen-small` model:
-
----
-
 🎼 **10 Music Generation Prompts**:
 
 1. **"A calm piano melody for a rainy evening"**  
@@ -14,7 +10,3 @@ Here are **10 creative prompts** you can use to generate music using the Hugging
 8. **"Soothing ambient soundscape for meditation"**  
 9. **"Funky bass and drums for a retro 80s vibe"**  
 10. **"Fast-paced techno loop for a high-energy workout"**
-
----
-
-Want prompts in a specific mood, genre, or instrument style? I can tailor them!
