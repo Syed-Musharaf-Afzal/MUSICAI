@@ -14,12 +14,6 @@ This is a full-stack web application that combines **real-time emotion detection
 
 ---
 
-## 🖼️ Demo
-
-![Demo Screenshot](demo.gif) <!-- Optional: Add a demo gif or screenshot here -->
-
----
-
 ## 🧠 How It Works
 
 ### 🎭 Emotion-Based Music Playback
@@ -41,8 +35,8 @@ This is a full-stack web application that combines **real-time emotion detection
 ### 1. Clone the Repo
 
 ```bash
-git clone https://github.com/your-username/emotion-text-music-app.git
-cd emotion-text-music-app
+git clone https://github.com/Syed-Musharaf-Afzal/MUSICAI.git
+cd MusicAI
 ```
 
 ### 2. Install Dependencies
@@ -91,15 +85,6 @@ The app will run at `http://127.0.0.1:5000`.
 
 ---
 
-## ✅ TODO / Improvements
-
-- [ ] Add user authentication
-- [ ] Save generated music to user library
-- [ ] Mobile responsiveness
-- [ ] Add gesture-based controls (hand gesture volume/playback)
-
----
-
 ## 🙌 Credits
 
 - [Hugging Face Transformers](https://huggingface.co/facebook/musicgen-small)
@@ -108,18 +93,22 @@ The app will run at `http://127.0.0.1:5000`.
 
 ---
 
+## 🎓 About Code Unnati
+
+This project is developed under the Code Unnati Capstone Project — a digital skilling initiative by Edunet Foundation, supported by SAP. Learn more: https://codeunnati.edunetfoundation.com
+
+---
+
+## 🤝 Contributors
+
+Syed Musharaf Afzal, Mohammed Hamza Hussain, Mohd Osman
+
+NSAKCET – Institutional Support
+
+Edunet Foundation – Capstone Mentorship
+
+---
+
 ## 📄 License
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
-
----
-
-## ⭐ Support
-
-If you like this project, consider giving it a ⭐ on [GitHub](https://github.com/your-username/emotion-text-music-app) and sharing it!
-
-```
-
----
-
-Let me know if you'd like me to tailor it further (e.g., link to your actual GitHub repo, screenshots, or GIF demo). Want a logo or badge section added too?
+This project is for educational purposes under the Code Unnati Capstone Program.
