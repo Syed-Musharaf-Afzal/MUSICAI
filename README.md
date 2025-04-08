@@ -22,7 +22,7 @@ This is a full-stack web application that combines **real-time emotion detection
 2. A pre-trained model detects the user's facial emotion.
 3. Based on the detected emotion (Happy, Sad, Angry, etc.), music is selected from categorized folders and played.
 
-### 🧠 Text-to-Music Generation
+### 🎧 Text-to-Music Generation
 
 1. User enters a **text prompt** (e.g., *"calm evening by the lake"*) and selects a **duration**.
 2. The backend calls Hugging Face’s `facebook/musicgen-small` model via API.
