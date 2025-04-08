@@ -89,7 +89,7 @@ The app will run at `http://127.0.0.1:5000`.
 
 - [Hugging Face Transformers](https://huggingface.co/facebook/musicgen-small)
 - [Bootstrap](https://getbootstrap.com/)
-- Emotion detection model based on OpenCV / Dlib / DeepFace
+- Emotion detection model based on OpenCV / Dlib / Haarcascade
 
 ---
 
