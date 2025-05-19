@@ -1,0 +1,189 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;1,500&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  text-decoration: none;
+  list-style: none;
+  border: none;
+  scroll-behavior: none;
+  outline: none;
+  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+}
+
+html {
+  font-size: 62.5%;
+  height: 100%;
+}
+
+body {
+  height: 100%;
+  background: #f9f9f9;
+  background-size: 100%; 
+  animation: gradient-animation 10s ease infinite;
+}
+
+/* 
+@keyframes gradient-animation {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+} */
+
+header {
+  position: fixed;
+  width: 100%;
+  top: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1.8rem 4rem;
+  background-color: transparent;
+  backdrop-filter: blur(5px);
+  transition: all 0.5s ease;
+  z-index: 1;
+}
+
+.logo {
+  margin-right: 1020px;
+  font-style: DancingScript;
+  font-size: 30px;
+  font-weight: 400;
+  color: black;
+  cursor: pointer;
+  transition: 0.5s ease;
+  transform: 0.5s ease;
+  clip-path: inset(0 100% 0 0);
+  animation: wipe 2s ease-out forwards;
+}
+
+@keyframes wipe {
+  0% {
+    clip-path: inset(0 100% 0 0);
+  }
+  100% {
+    clip-path: inset(0 0% 0);
+  }
+}
+
+.logo:hover {
+  transform: scale(1.2);
+}
+
+span {
+  font-size: 33px;
+  font-weight: 500;
+  color: #6c5ce7;
+  font-family: DancingScript;
+}
+
+.navbar {
+  display: flex;
+  margin-left: 25rem;
+}
+
+.navbar a {
+  font-size: 1.8rem;
+  font-weight: 500;
+  color: whitesmoke;
+  margin-left: 4rem;
+  transition: all 0.5s ease;
+  /* border-bottom: 3px solid blue; */
+}
+
+.navbar a:hover,
+.navbar a:active {
+  /* color: lightblue; */
+  border-bottom: 3px solid blue;
+}
+
+.left {
+  position: relative;
+  margin-left: 70px;
+  margin-top: 150px;
+}
+
+.left img {
+  display: flex;
+  width: 480px;
+  height: 235px; 
+  margin-left: 20px;
+  margin-top: 10%;
+  transition: 0.5s ease;
+}
+
+.left img:hover{
+  transform: scale(1.1);
+}
+
+a.button {
+  display: flex;
+  margin-left: 82px;
+  margin-top: 18px;
+  width: 335px;
+  justify-content: center;
+  align-items: center;
+  height: 45px;
+  background: #6c5ce7; /* Original violet */
+  color: white;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 20px; /* Rounded pill shape */
+  font-size: 25px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-style: italic;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+a.button:hover {
+  background: #a29bfe;
+  transform: translateY(-2px) scale(1.02);
+}
+
+a.button2 {
+  display: flex;
+  margin-left: 850px;
+  margin-top: 20px;
+  width: 380px;
+  justify-content: center;
+  align-items: center;
+  height: 45px;
+  background: #6c5ce7; /* Original violet */
+  color: white;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 20px; /* Rounded pill shape */
+  font-size: 25px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-style: italic;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+a.button2:hover {
+  background: #a29bfe;
+  transform: translateY(-2px) scale(1.02);
+}
+
+.right img {
+  position: relative;
+  display: flex;
+  width: 450px; /* Same width as .left img */
+  height: 235px; /* Same height as .left img */
+  margin-left: 815px;
+  margin-top: -22%;
+  transition: transform 0.5s ease;  
+}
+
+.right img:hover{
+  transform: scale(1.1);
+}

@@ -1,0 +1,217 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  text-decoration: none;
+  list-style: none;
+  border: none;
+  outline: none;
+  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+}
+
+html {
+  font-size: 62.5%;
+  height: 100%;
+}
+
+body {
+  height: 100%;
+  background: #fefefe;
+  background-size: 180% 180%;
+  animation: gradient-animation 10s ease infinite;
+}
+
+/* Page Heading */
+h1 {
+  font-size: 4rem;
+  font-weight: bold;
+  color: #6c5ce7;
+  margin-left: 450px;
+  margin-top: 20px;
+}
+
+/* Video Feed */
+.video {
+  width: 100%;
+  height: 450px;
+  border: 2px solid black;
+  margin: 20px auto;
+  border-radius: 20px;
+  margin-left: 50px;
+  /* box-shadow: 0 5px 20px rgba(0, 0, 255, 1); */
+}
+
+/* Emotion Container */
+#emotionContainer {
+  font-size: 2.8rem;
+  font-weight: bold;
+  margin-top: 20px;
+  margin-left: 248px;
+  color: black;
+}
+
+#emotionType{
+  color: #000;
+}
+
+.button{
+  display: flex;
+  margin-left: 218px;
+  width: 300px;    
+  justify-content: center;
+  height: 45px;
+  background: #6c5ce7;
+  color: white;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 5px;
+  cursor: pointer;
+  align-items: center; /* Original violet */
+  border-radius: 20px; /* Rounded pill shape */
+  font-size: 25px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-style: italic;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+button:hover {
+  background: #a29bfe;
+  transform: translateY(-2px) scale(1.02);
+}
+
+button:hover {
+  background: #a29bfe;
+  transform: translateY(-2px);
+}
+
+/* Music Player */
+#musicPlayerContainer {
+  width: 320px;
+  height: 440px;
+  margin-left: 870px;
+  margin-top: -530px;
+  background-color: white;
+  border-radius: 15px;
+  padding: 20px;
+  border: 2px solid black;
+  /* box-shadow: 0 5px 20px rgba(0, 0, 255, 1); */
+  transition: 0.5s ease;
+}
+
+#musicPlayerContainer:hover {
+  transform: scale(1.05);
+}
+
+#musicPlayerContainer h1 {
+  /* display: flex; */
+  font-size: 25px;
+  margin-left: 75px;
+  margin-bottom: 50px;
+  margin-top: 5px;
+}
+
+.audio-img-wrapper {
+  /* display: flex; */
+  align-items: center;
+  margin-bottom: 15px;
+  margin-left: 40px;
+  margin-top: -30px;
+}
+
+.audio-img img {
+  display: flex;
+  width: 200px;
+  height: 200px;
+  border: 2px solid #ffff;
+  border-radius: 50%;
+  margin-right: 15px;
+  transition: 0.5s ease;
+}
+
+.audio-img img:hover {
+  transform: scale(1.1);
+}
+
+.audio-title {
+  font-size: 2rem;
+  font-weight: bold;
+  color: black;
+  margin-left: 45px;
+  margin-top: 20px;
+}
+
+.audio-singer {
+  font-size: 1.4rem;
+  color: #555;
+}
+
+.audio-progress {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 10px 0;
+}
+
+.progress {
+  display: flex;
+  flex-grow: 1;
+  height: 2px;
+  background-color: black;
+  position: relative;
+  border-radius: 5px;
+  margin: 0px 8px;
+}
+
+.progress-bar {
+  width: 0%;
+  height: 100%;
+  background-color: black;
+  border-radius: 5px;
+}
+
+.progress-head {
+  width: 10px;
+  height: 10px;
+  background-color: black;
+  border-radius: 100%;
+  position: absolute;
+  top: 0px;
+  left: 0%;
+  transform: translateX(-50%);
+  margin-top: -4px;
+}
+
+.current-time {
+  font-size: 1.2rem;
+  color: black;
+  margin-left: 5px;
+  margin-top: 2px;
+}
+
+.duration {
+  font-size: 1.2rem;
+  color: black;
+}
+
+.audio-btns {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.btn {
+  font-size: 2rem;
+  cursor: pointer;
+  color: #000;
+  background-color: #0000;
+  padding: 10px 15px;
+  border: 2px solid black;
+  border-radius: 50%;
+  transition: background-color 0.3s ease;
+}
+
+.btn:hover {
+  background-color: #6c5ce7;
+  color: #fff;
+}
