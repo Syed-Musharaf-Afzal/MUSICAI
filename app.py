@@ -1,94 +1,47 @@
-from flask import Flask, render_template, Response, request, jsonify
-import numpy as np
-import cv2
-import os
-import random
-import threading
-import requests
-import time
-from datetime import datetime
-from dotenv import load_dotenv
-
+from flask import Flask, render_template, Response, request, jsonify, send_from_directory
+import os, random, threading, time, uuid, cv2, numpy as np, pretty_midi
+from text_to_music import TextToMusicConverter
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Dropout, Flatten, Conv2D, MaxPooling2D
 
-# Load environment variables
-load_dotenv()
-HF_TOKEN = os.getenv("HF_TOKEN")
-if not HF_TOKEN:
-    raise ValueError("HF_TOKEN not found in .env file!")
-
-# Flask app setup
 app = Flask(__name__)
-
-# Hugging Face config
-API_URL = "https://api-inference.huggingface.co/models/facebook/musicgen-small"
-HEADERS = {"Authorization": f"Bearer {HF_TOKEN}"}
-
-# Emotion model
-model = Sequential()
-model.add(Conv2D(32, kernel_size=(3, 3), activation='relu', input_shape=(48, 48, 1)))
-model.add(Conv2D(64, kernel_size=(3, 3), activation='relu'))
-model.add(MaxPooling2D(pool_size=(2, 2)))
-model.add(Dropout(0.25))
-model.add(Conv2D(128, kernel_size=(3, 3), activation='relu'))
-model.add(MaxPooling2D(pool_size=(2, 2)))
-model.add(Conv2D(128, kernel_size=(3, 3), activation='relu'))
-model.add(MaxPooling2D(pool_size=(2, 2)))
-model.add(Dropout(0.25))
-model.add(Flatten())
-model.add(Dense(1024, activation='relu'))
-model.add(Dropout(0.5))
-model.add(Dense(7, activation='softmax'))
-model.load_weights('model.h5')
+app.config['UPLOAD_FOLDER'] = 'static/sounds'
+os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
 emotion_dict = {
     0: "Angry", 1: "Disgusted", 2: "Fearful",
     3: "Happy", 4: "Neutral", 5: "Sad", 6: "Surprised"
 }
+model = Sequential([
+    Conv2D(32, (3, 3), activation='relu', input_shape=(48, 48, 1)),
+    Conv2D(64, (3, 3), activation='relu'),
+    MaxPooling2D(pool_size=(2, 2)),
+    Dropout(0.25),
+    Conv2D(128, (3, 3), activation='relu'),
+    MaxPooling2D(pool_size=(2, 2)),
+    Conv2D(128, (3, 3), activation='relu'),
+    MaxPooling2D(pool_size=(2, 2)),
+    Dropout(0.25),
+    Flatten(),
+    Dense(1024, activation='relu'),
+    Dropout(0.5),
+    Dense(7, activation='softmax')
+])
+model.load_weights('model.h5')
+
+converter = TextToMusicConverter()
 detected_emotion = None
-
-def generate_frames():
-    global detected_emotion
-    cap = cv2.VideoCapture(0)
-    face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
-
-    while True:
-        ret, frame = cap.read()
-        if not ret:
-            break
-
-        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-        faces = face_cascade.detectMultiScale(gray, scaleFactor=1.3, minNeighbors=5)
-
-        for (x, y, w, h) in faces:
-            cv2.rectangle(frame, (x, y-50), (x+w, y+h+10), (255, 0, 0), 2)
-            roi_gray = gray[y:y+h, x:x+w]
-            cropped_img = np.expand_dims(np.expand_dims(cv2.resize(roi_gray, (48, 48)), -1), 0)
-            prediction = model.predict(cropped_img)
-            max_index = int(np.argmax(prediction))
-            detected_emotion = emotion_dict[max_index]
-            cv2.putText(frame, detected_emotion, (x+20, y-60), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2)
-
-        _, buffer = cv2.imencode('.jpg', frame)
-        frame = buffer.tobytes()
-        yield (b'--frame\r\nContent-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
-
-    cap.release()
-    cv2.destroyAllWindows()
-
-# ===================== Routes ======================
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('index.html')  # unified home
 
 @app.route('/Emotion')
-def eom():
+def emotion_page():
     return render_template('Eom.html')
 
 @app.route('/tom')
-def tom():
+def text_to_music_page():
     return render_template('tom.html')
 
 @app.route('/video_feed')
@@ -101,53 +54,68 @@ def detect_emotion():
     if detected_emotion:
         emotion = detected_emotion
         detected_emotion = None
-
         music_folder = os.path.join("static", "songs", emotion.lower())
         if not os.path.exists(music_folder) or not os.listdir(music_folder):
             return jsonify({'emotion': emotion, 'status': f'No songs available for {emotion}', 'song': None})
-
         song_name = random.choice(os.listdir(music_folder))
         song_path = f"/static/songs/{emotion.lower()}/{song_name}"
-
         return jsonify({'emotion': emotion, 'status': f'Music selected for {emotion}', 'song': song_path})
-
     return jsonify({'emotion': None, 'status': 'No emotion detected', 'song': None})
 
-@app.route("/generate", methods=["POST"])
-def generate():
-    prompt = request.form.get("prompt")
+@app.route('/generate', methods=['POST'])
+def generate_music():
+    text = request.form.get('text')
+    emotion = request.form.get('emotion', 'auto')
+    filename = f"output_{uuid.uuid4().hex}.mid"
+    output_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+    if emotion == 'auto':
+        converter.text_to_music(text, output_file=output_path, play=False)
+    else:
+        midi = converter.generate_melody(emotion)
+        chords = converter.generate_chords(emotion)
+        for instrument in chords.instruments:
+            midi.instruments.append(instrument)
+        midi.write(output_path)
+    return jsonify({'success': True, 'file': filename, 'emotion': emotion, 'text': text})
 
-    if not prompt:
-        return jsonify({"status": "error", "message": "Prompt is required."})
+@app.route('/play/<filename>')
+def play_midi(filename):
+    try:
+        midi_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        converter.play_midi(pretty_midi.PrettyMIDI(midi_path))
+        return jsonify({'success': True})
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)})
 
-    payload = {"inputs": prompt}  # ONLY send prompt!
+def generate_frames():
+    global detected_emotion
+    cap = cv2.VideoCapture(0)
+    face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
+    while True:
+        ret, frame = cap.read()
+        if not ret:
+            break
+        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+        faces = face_cascade.detectMultiScale(gray, scaleFactor=1.3, minNeighbors=5)
+        for (x, y, w, h) in faces:
+            roi_gray = gray[y:y+h, x:x+w]
+            cropped_img = np.expand_dims(np.expand_dims(cv2.resize(roi_gray, (48, 48)), -1), 0)
+            prediction = model.predict(cropped_img, verbose=0)
+            max_index = int(np.argmax(prediction))
+            detected_emotion = emotion_dict[max_index]
 
-    for attempt in range(3):  # Retry up to 3 times
-        try:
-            response = requests.post(API_URL, headers=HEADERS, json=payload)
+            # --- Draw thick green rectangle ---
+            cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 4)
 
-            if response.status_code == 503:
-                return jsonify({"status": "error", "message": "Model is loading. Try again."})
-            elif response.status_code == 401:
-                return jsonify({"status": "error", "message": "Invalid Hugging Face token."})
-            elif response.status_code == 500:
-                return jsonify({"status": "error", "message": "Internal server error from Hugging Face. Prompt might be too complex or model crashed."})
-            elif response.status_code != 200:
-                return jsonify({"status": "error", "message": f"API error {response.status_code}: {response.text}"})
+            # --- Display emotion ---
+            cv2.putText(frame, detected_emotion, (x, y - 10),
+                        cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2)
+            
+        _, buffer = cv2.imencode('.jpg', frame)
+        frame = buffer.tobytes()
+        yield (b'--frame\r\nContent-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+    cap.release()
+    cv2.destroyAllWindows()
 
-            audio_data = response.content
-            timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
-            filename = f"static/music_{timestamp}.wav"
-            with open(filename, "wb") as f:
-                f.write(audio_data)
-
-            return jsonify({"status": "success", "file": filename})
-        except Exception as e:
-            return jsonify({"status": "error", "message": f"Exception: {str(e)}"})
-
-    return jsonify({"status": "error", "message": "Model too busy. Try later."})
-
-# ===================== Run ======================
-
-if __name__ == "__main__":
+if __name__ == '__main__':
     app.run(debug=True)
