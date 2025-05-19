@@ -9,7 +9,7 @@ This is a full-stack web application that combines **real-time emotion detection
 - 🧠 Generate music from **text prompts** using Hugging Face’s `facebook/musicgen-small` model
 - 🎛️ Interactive music controls (play, pause, forward, volume)
 - 🌐 Frontend built with HTML, CSS, JavaScript, and Bootstrap
-- 🔙 Backend powered by Flask (Python 3.7 and 3.12)
+- 🔙 Backend powered by Flask (Python 3.10)
 - 🔒 Hugging Face Inference API integration with API key support
 
 ---
