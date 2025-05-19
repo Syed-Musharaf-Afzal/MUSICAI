@@ -18,7 +18,7 @@
     <title>Emotion Detection</title>
   </head>
   <body>
-    <h1>Generate Emotion to Music</h1>
+    <h1>Emotion to Music Generator</h1>
 
     <div style="display: flex; align-items: flex-start">
       <!-- Video Feed -->
@@ -35,29 +35,13 @@
     </div>
 
     <!-- Generate Music Button -->
-    <button id="generateMusicButton" class="button" style="margin-top: 20px">
-      <div class="dots_border"></div>
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-        class="sparkle"
-      >
-        <path
-          class="path"
-          stroke-linejoin="round"
-          stroke-linecap="round"
-          stroke="black"
-          fill="black"
-          d="M14.187 8.096L15 5.25L15.813 8.096C16.0231 8.83114 16.4171 9.50062 16.9577 10.0413C17.4984 10.5819 18.1679 10.9759 18.903 11.186L21.75 12L18.904 12.813C18.1689 13.0231 17.4994 13.4171 16.9587 13.9577C16.4181 14.4984 16.0241 15.1679 15.814 15.903L15 18.75L14.187 15.904C13.9769 15.1689 13.5829 14.4994 13.0423 13.9587C12.5016 13.4181 11.8321 13.0241 11.097 12.814L8.25 12L11.096 11.187C11.8311 10.9769 12.5006 10.5829 13.0413 10.0423C13.5819 9.50162 13.9759 8.83214 14.186 8.097L14.187 8.096Z"
-        ></path>
-      </svg>
+    <button id="generateMusicButton" class="button" style="margin-top: -12px">
       <span class="text_button">Detect Emotion</span>
     </button>
     <div id= "emotionContainer" style="
     font-size: 20px;
     font-weight: bold;
-    margin-top: -10px;
+    margin-top: 10px;
     margin-left: 240px;
     text-shadow: 0px 0px 20px rgba(0, 0, 255, 1);">Emotion Detected: <span id="emotionType">-------</span></div>
     <!-- Music Player -->
@@ -161,7 +145,7 @@
             .catch((error) => {
               console.error("Error fetching emotion data:", error);
             });
-        }, 10000); // 10-second delay
+        }, 20000); // 10-second delay
       });
       
       // Music Player Controls
