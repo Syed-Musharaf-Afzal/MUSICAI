@@ -1,158 +1,53 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Text to Music Generator</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-
-  <style>
-    body {
-      font-family: 'Open Sans', sans-serif;
-      background-color: #ae82d9;
-      color: white;
-    }
-    .container {
-      max-width: 600px;
-      padding-top: 5%;
-    }
-    .card {
-      background: linear-gradient(145deg, #fff, #fff);
-      border: none;
-      border-radius: 25px;
-      box-shadow: 0 0 20px #ae82d9;
-    }
-    .btn-primary {
-      background-color: #ae82d9;
-      border: none;
-      border-radius: 50px;
-    }
-    .btn-primary:hover {
-      background-color: black;
-    }
-    .form-control {
-      background-color: transparent;
-      border-color: black;
-      color: black;
-    }
-    .form-control::placeholder {
-      color: black;
-    }
-    .form-control:focus {
-      background-color: white;
-      color: black;
-      box-shadow: none;
-    }
-    .slider {
-      -webkit-appearance: none;
-      width: 100%;
-      height: 5px;
-      border-radius: 5px;
-      background: black;
-      outline: none;
-      opacity: 0.8;
-      transition: opacity .2s;
-    }
-    .slider:hover {
-      opacity: 1;
-    }
-    .slider::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      width: 15px;
-      height: 15px;
-      border-radius: 50%;
-      background: #000;
-      cursor: pointer;
-    }
-    .slider::-moz-range-thumb {
-      width: 25px;
-      height: 25px;
-      border-radius: 50%;
-      background: #000;
-      cursor: pointer;
-      box-shadow: 0 0 10px #000;
-    }
-    .audio-player audio {
-      width: 70%;
-      margin-top: 20px;
-    }
-    .btn-success {
-      background-color: #28a745;
-      border: none;
-    }
-    .btn-success:hover {
-      background-color: #218838;
-    }
-    #result {
-      margin-top: 2rem;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text to Music Generator</title>
+    <link rel="stylesheet" href="static/style1.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
 <body>
-  <div class="container text-center">
-    <h1 class="mb-4" style="margin-left: -50px;"><b>🎶 Text to Music Generator</b></h1>
-    <p class="mb-4">Describe the music you want and generate it in seconds!</p>
+    <div class="container">
+        <header>
+            <h1>Text to Music Generator</h1>
+            <p>Convert your emotions into beautiful melodies</p>
+        </header>
 
-    <div class="card p-4">
-      <form id="musicForm">
-        <div class="mb-3">
-          <input type="text" name="prompt" class="form-control" placeholder="Enter a music prompt" required />
-        </div>
-        <div class="mb-4 text-start">
-          <label for="duration" class="form-label" style="color: black; font-size: 14px;">Duration (in seconds): <span id="durationValue">10</span></label>
-          <input type="range" name="duration" class="slider" id="duration" min="1" max="30" value="10" />
-        </div>
-        <button type="submit" class="btn btn-primary w-50"><b>Generate</b> <i class="fas fa-music"></i></button>
-      </form>
+        <main>
+            <div class="generator-box">
+                <div class="input-section">
+                    <textarea id="text-input" placeholder="Type your text here..."></textarea>
+                    <div class="emotion-selector">
+                        <label>Emotion:</label>
+                        <select id="emotion-select">
+                            <option value="auto">Auto Detect</option>
+                            <option value="happy">Happy</option>
+                            <option value="sad">Sad</option>
+                            <option value="angry">Angry</option>
+                            <option value="neutral">Neutral</option>
+                        </select>
+                    </div>
+                    <button id="generate-btn">Generate Music</button>
+                </div>
+
+                <div class="output-section">
+                    <div class="result-box hidden" id="result-box">
+                        <div class="emotion-display">
+                            <span id="emotion-icon">🎵</span>
+                            <span id="emotion-text">Neutral</span>
+                        </div>
+                        <p class="original-text" id="original-text"></p>
+                        <div class="player-controls">
+                            <button id="play-btn">▶ Play</button>
+                            <a id="download-btn" download>↓ Download MIDI</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
     </div>
 
-    <div id="result" class="audio-player mt-4"></div>
-  </div>
-
-  <script>
-    const durationSlider = document.getElementById("duration");
-    const durationValue = document.getElementById("durationValue");
-  
-    durationSlider.addEventListener("input", () => {
-      durationValue.textContent = durationSlider.value;
-    });
-  
-    document.getElementById("musicForm").addEventListener("submit", async function(e) {
-      e.preventDefault();
-      // Keep it like this — no need to send duration
-      const formData = new FormData(this); // Only prompt is sent
-      const result = document.getElementById("result");
-      result.innerHTML = "<div class='text-warning'>⏳ Generating music...</div>";
-  
-      try {
-        const res = await fetch("/generate", {
-          method: "POST",
-          body: formData
-        });
-        const data = await res.json();
-  
-        if (data.status === "success") {
-          result.innerHTML = `
-            <h5>Generated Music:</h5>
-            <audio controls>
-              <source src="${data.file}" type="audio/wav">
-              Your browser does not support the audio element.
-            </audio>
-            <br>
-            <a href="${data.file}" download class="btn btn-success mt-3">
-              <i class="fas fa-download"></i> Download
-            </a>
-          `;
-        } else {
-          result.innerHTML = "<p class='text-danger'>" + data.message + "</p>";
-        }
-      } catch (error) {
-        result.innerHTML = "<p class='text-danger'>Something went wrong. Please try again.</p>";
-        console.error(error);
-      }
-    });
-  </script>
-
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>
